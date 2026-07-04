@@ -1,3 +1,14 @@
+/*
+=========================================
+THE PROBLEMS
+=========================================
+• Inconsistent Date Formats: The raw dates were a messy mix of different styles (some like '2023-01-01' and others like '01/01/2023'), which confuses the database.
+• Corrupted Financial Data: The lifetime value column contained text characters like '$' and ',' symbols, making it impossible to perform mathematical calculations.
+• Text Formatting Flaws: The acquisition channels had uneven capitalization and hidden spacing issues.
+• System Duplicate Records: A CRM glitch created exact duplicate entries for the same patient on the same dates, bloating the table size with bad data.
+*/
+--_________________________________________________________________________________________________________________________________________________________________
+
 WITH parsed_patients AS (
     SELECT
         patient_sk,
@@ -26,7 +37,7 @@ deduplicated_patients AS (
         ROW_NUMBER() OVER(
             PARTITION BY patient_id, valid_from 
             ORDER BY is_current DESC, patient_sk DESC
-        ) AS row_num
+        ) AS row_patients
     FROM 
         parsed_patients
 )
@@ -43,4 +54,14 @@ SELECT
 FROM 
     deduplicated_patients
 WHERE 
-    row_num = 1;
+    row_patients = 1;
+
+
+ /*
+=========================================
+AUDIT FINDINGS & BREAKDOWN
+=========================================
+• Complete Timeline Anchoring: Used '1900-01-01' to fix missing start dates and '9999-12-31' for active profiles so that patient history never gets broken or cut off.
+• Financial Columns Fixed: Stripped out all currency symbols and converted text values into clean numeric formats for downstream calculations.
+• Smart Deduplication: Used a window function to isolate and remove true duplicates while successfully keeping the valid historical record changes intact.
+*/
