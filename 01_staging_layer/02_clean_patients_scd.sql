@@ -1,12 +1,12 @@
 /*
-=========================================
-THE PROBLEMS
-=========================================
-• Inconsistent Date Formats: The raw dates were a messy mix of different styles (some like '2023-01-01' and others like '01/01/2023'), which confuses the database.
-• Corrupted Financial Data: The lifetime value column contained text characters like '$' and ',' symbols, making it impossible to perform mathematical calculations.
-• Text Formatting Flaws: The acquisition channels had uneven capitalization and hidden spacing issues.
-• System Duplicate Records: A CRM glitch created exact duplicate entries for the same patient on the same dates, bloating the table size with bad data.
-*/
+ =========================================
+ THE PROBLEMS
+ =========================================
+ • Inconsistent Date Formats: The raw dates were a messy mix of different styles (some like '2023-01-01' and others like '01/01/2023'), which confuses the database.
+ • Corrupted Financial Data: The lifetime value column contained text characters like '$' and ',' symbols, making it impossible to perform mathematical calculations.
+ • Text Formatting Flaws: The acquisition channels had uneven capitalization and hidden spacing issues.
+ • System Duplicate Records: A CRM glitch created exact duplicate entries for the same patient on the same dates, bloating the table size with bad data.
+ */
 --_________________________________________________________________________________________________________________________________________________________________
 
 WITH parsed_patients AS (
@@ -15,7 +15,11 @@ WITH parsed_patients AS (
         patient_id,
         UPPER(TRIM(acquisition_channel)) AS acquisition_channel,
         birth_year,
-        CAST(TRIM(REPLACE(REPLACE(lifetime_value, '$', ''), ',', '')) AS NUMERIC) AS lifetime_value,
+        CAST(
+            TRIM(
+                REPLACE(REPLACE(lifetime_value, '$', ''), ',', '')
+            ) AS NUMERIC
+        ) AS lifetime_value,
         COALESCE(
             SAFE.PARSE_DATE('%Y-%m-%d', valid_from),
             SAFE.PARSE_DATE('%m/%d/%Y', valid_from),
@@ -27,22 +31,23 @@ WITH parsed_patients AS (
             DATE '9999-12-31'
         ) AS valid_to,
         is_current
-    FROM 
+    FROM
         `enterprise-health-analytics.raw.dim_patients_scd`
 ),
-
 deduplicated_patients AS (
     SELECT
         *,
         ROW_NUMBER() OVER(
-            PARTITION BY patient_id, valid_from 
-            ORDER BY is_current DESC, patient_sk DESC
+            PARTITION BY patient_id,
+            valid_from
+            ORDER BY
+                is_current DESC,
+                patient_sk DESC
         ) AS row_patients
-    FROM 
+    FROM
         parsed_patients
 )
-
-SELECT 
+SELECT
     patient_sk,
     patient_id,
     acquisition_channel,
@@ -51,17 +56,17 @@ SELECT
     valid_from,
     valid_to,
     is_current
-FROM 
+FROM
     deduplicated_patients
-WHERE 
+WHERE
     row_patients = 1;
 
-
- /*
-=========================================
-AUDIT FINDINGS & BREAKDOWN
-=========================================
-• Complete Timeline Anchoring: Used '1900-01-01' to fix missing start dates and '9999-12-31' for active profiles so that patient history never gets broken or cut off.
-• Financial Columns Fixed: Stripped out all currency symbols and converted text values into clean numeric formats for downstream calculations.
-• Smart Deduplication: Used a window function to isolate and remove true duplicates while successfully keeping the valid historical record changes intact.
-*/
+--___________________________________________________________________________________________________________________________________________________________________________
+/*
+ =========================================
+ AUDIT FINDINGS & BREAKDOWN
+ =========================================
+ • Complete Timeline Anchoring: Used '1900-01-01' to fix missing start dates and '9999-12-31' for active profiles so that patient history never gets broken or cut off.
+ • Financial Columns Fixed: Stripped out all currency symbols and converted text values into clean numeric formats for downstream calculations.
+ • Smart Deduplication: Used a window function to isolate and remove true duplicates while successfully keeping the valid historical record changes intact.
+ */
