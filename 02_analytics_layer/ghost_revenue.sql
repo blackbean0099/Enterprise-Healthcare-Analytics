@@ -13,7 +13,7 @@ WITH session_events AS (
         COUNTIF(event_type = 'CAMERA_TEST') AS CAMERA_TEST,
         COUNTIF(event_type = 'VIDEO_LIVE') AS VIDEO_LIVE,
         COUNTIF(event_type = 'VIDEO_DROP') AS VIDEO_DROP,
-        COUNTIF(event_type = 'END') AS vedio_end
+        COUNTIF(event_type = 'END') AS video_end
     FROM
         `raw.clean_telemetry`
     GROUP BY
@@ -27,9 +27,9 @@ session_classification as (
             WHEN INIT > 0
             and CAMERA_TEST > 0
             and VIDEO_LIVE > 0
-            and vedio_end > 0 then 1
+            and video_end > 0 then 1
             else 0
-        end as sucessful_section,
+        end as successful_session,
         --technical_failure
         case
             WHEN VIDEO_DROP > 0 then 1
@@ -40,7 +40,7 @@ session_classification as (
             WHEN INIT > 0
             and CAMERA_TEST > 0
             and VIDEO_LIVE = 0
-            and vedio_end > 0 then 1
+            and video_end > 0 then 1
             else 0
         end as left_before_doc,
         -- Ghost Claim (Fraud)
