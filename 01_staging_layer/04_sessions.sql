@@ -7,6 +7,8 @@
  */
 --____________________________________________________________________________________________________________
 
+CREATE OR REPLACE VIEW `raw.clean_sessions` AS
+
 WITH parsed_session AS (
     SELECT
         session_id,
@@ -14,10 +16,10 @@ WITH parsed_session AS (
         COALESCE(
             SAFE.PARSE_DATETIME('%m/%d/%Y %H:%M:%S', start_time),
             SAFE.PARSE_DATETIME('%Y-%m-%d %H:%M:%S', start_time),
-            datetime '1900-01-01 00:00:00'
+            DATETIME '1900-01-01 00:00:00'
         ) AS start_time
     FROM
-        `raw.fact_sessions`
+        `enterprise-health-analytics.raw.fact_sessions`
 ),
 deduplicated_session AS (
     SELECT
@@ -37,7 +39,7 @@ SELECT
 FROM
     deduplicated_session
 WHERE
-    row_session = 1
+    row_session = 1;
      
 --_________________________________________________________________________________________
 /*

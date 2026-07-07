@@ -7,6 +7,9 @@
  • Duplicate Claims: System glitches may have recorded the exact same billing claim multiple times. 
  */
 --______________________________________________________________________________________________________________________________________________________________________________________
+
+CREATE OR REPLACE VIEW `raw.clean_billing` AS
+
 WITH parsed_billing AS (
     SELECT
         claim_id,
@@ -19,7 +22,7 @@ WITH parsed_billing AS (
         ) AS billed_amount,
         UPPER(TRIM(status)) AS status
     FROM
-        raw.fact_billing
+        `enterprise-health-analytics.raw.fact_billing`
 ),
 deduplicated_billing AS (
     SELECT
@@ -41,7 +44,8 @@ SELECT
 FROM
     deduplicated_billing
 WHERE
-    row_billing = 1 
+    row_billing = 1;
+
     
 --___________________________________________________________________________________________
 /*

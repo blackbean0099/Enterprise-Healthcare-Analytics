@@ -7,18 +7,14 @@
  */
 --__________________________________________________________________________________________________________________________________________________
 
-with clean_campaigns as (
-    SELECT
-        UPPER(TRIM(campaign_id)) as campaign_id,
-        UPPER(TRIM(platform)) as platform,
-        UPPER(TRIM(target)) as target
-    FROM
-        `raw.dim_campaigns`
-)
+CREATE OR REPLACE VIEW `raw.clean_campaigns` AS 
+
 SELECT
-    *
+    UPPER(TRIM(campaign_id)) as campaign_id,
+    UPPER(TRIM(platform)) as platform,
+    UPPER(TRIM(target)) as target
 FROM
-    clean_campaigns 
+    `raw.dim_campaigns`;
 --_________________________________________________________________________________________________
     /*
      =========================================

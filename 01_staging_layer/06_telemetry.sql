@@ -8,6 +8,8 @@
  */
  --__________________________________________________________________________________________________________________________________________________________________________
 
+CREATE OR REPLACE VIEW `raw.clean_telemetry` AS
+
 WITH parsed_telemetry AS (
     SELECT
         event_id,
@@ -19,7 +21,7 @@ WITH parsed_telemetry AS (
         JSON_VALUE(payload, '$.net[0].ip') as ip_address,
         SAFE_cast(JSON_VALUE(payload, '$.net[0].ping') as INT64) as net_ping
     FROM
-        `raw.fact_telemetry`
+        `enterprise-health-analytics.raw.fact_telemetry`
 ),
 deduplicated_telemetry as (
     SELECT
@@ -45,7 +47,7 @@ SELECT
 FROM
     deduplicated_telemetry
 WHERE
-    row_telemetry = 1
+    row_telemetry = 1;
 
 --___________________________________________________________________________________________________
 /*

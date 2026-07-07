@@ -8,7 +8,9 @@
  */
 --___________________________________________________________________________________________________________________________________
 
-with parsed_support_ticket AS (
+CREATE OR REPLACE VIEW `raw.clean_support_tickets` AS
+
+WITH parsed_support_ticket AS (
     SELECT
         ticket_id,
         patient_id,
@@ -17,10 +19,10 @@ with parsed_support_ticket AS (
         csat_score,
         COALESCE(
             SAFE.PARSE_DATETIME('%Y-%m-%d %H:%M:%S', created_at),
-            datetime '1900-01-01 00:00:00'
+            DATETIME '1900-01-01 00:00:00'
         ) AS created_at
     FROM
-        `raw.fact_support_tickets`
+        `enterprise-health-analytics.raw.fact_support_tickets`
 ),
 deduplicated_support_ticket AS (
     SELECT
@@ -40,10 +42,10 @@ SELECT
     category,
     csat_score,
     created_at
-from
+FROM
     deduplicated_support_ticket
 WHERE
-    row_support_ticket = 1 
+    row_support_ticket = 1;
     
 --__________________________________________________________________________________
 /*

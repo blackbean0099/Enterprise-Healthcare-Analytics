@@ -7,53 +7,14 @@
  */
  --_______________________________________________________________________________________________________________________________________
 
-WITH parsed_telemetry AS (
-    SELECT
-        event_id,
-        session_id,
-        UPPER(TRIM(event_type)) AS event_type,
-        DATETIME(TIMESTAMP_SECONDS (epoch_time)) AS epoch_time_readable,
-        JSON_VALUE(payload, '$.hw.os') as operating_system,
-        SAFE_cast(JSON_VALUE(payload, '$.hw.ram_gb') as INT64) as ram_gb,
-        JSON_VALUE(payload, '$.net[0].ip') as ip_address,
-        SAFE_cast(JSON_VALUE(payload, '$.net[0].ping') as INT64) as net_ping
-    FROM
-        `raw.fact_telemetry`
-),
-deduplicated_telemetry as (
-    SELECT
-        *,
-        ROW_NUMBER() OVER(
-            PARTITION BY event_id,
-            session_id
-            ORDER BY
-                epoch_time_readable DESC
-        ) AS row_telemetry
-    FROM
-        parsed_telemetry
-),
-clean_telemetry as (
-    SELECT
-        event_id,
-        session_id,
-        event_type,
-        epoch_time_readable,
-        operating_system,
-        ram_gb,
-        ip_address,
-        net_ping
-    FROM
-        deduplicated_telemetry
-    WHERE
-        row_telemetry = 1
-)
+
 SELECT
     operating_system,
     event_type,
     APPROX_QUANTILES(net_ping, 100) [SAFE_OFFSET(50)] AS median_net_ping,
     APPROX_QUANTILES(ram_gb, 100) [SAFE_OFFSET(50)] AS median_ram
 FROM
-    clean_telemetry
+    `raw.clean_telemetry`
 WHERE
     event_type IN ('END', 'VIDEO_DROP')
 group BY
