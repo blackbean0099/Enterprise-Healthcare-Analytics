@@ -82,8 +82,9 @@ graph TD
     
     class A1,A2,A3,A4,A5,A6 raw;
     class B1,B2,B3,B4,B5,B6 transform;
-    class C1,C2,C3,C4,C5,C6 clean;
-
+    class C1,C2,C3,C4,C5,C6 clean; 
+    
+`````
 ---
 
 ### 📊 07_demographic_acquisition_matrix.sql
@@ -91,7 +92,9 @@ graph TD
 * **What I Did:** I handled Slowly Changing Dimensions (SCD) by filtering for `is_current = 1` and dynamically calculated patient ages using `CURRENT_DATE()` to ensure accurate Customer Acquisition Cost (CAC) and LTV math.
 * **My Audit Findings:** CAC is identical across all channels at roughly **$13.50 per acquisition**. However, Email generates an older demographic with a **$1,898 Lifetime Value**, while TikTok yields a younger demographic with only a **$100 LTV**.
 
-![Demographic LTV Matrix Chart](assets/demographic_acquisition_matrix.png)
+
+![Demographic LTV Matrix Chart](ASSETS\07_Demographic_Acquisition_Matrix.png)
+
 
 ---
 
@@ -100,16 +103,17 @@ graph TD
 * **What I Did:** I analyzed the backend telemetry ping logs against successful and failed video sessions to find the breaking point of the software.
 * **My Audit Findings:** I identified a consistent `999` ping spike. The data indicated that sessions hitting this latency threshold reliably triggered a backend network timeout.
 
-![Latency Crash Threshold Graph](assets/latency_crash_threshold.png)
+![Latency Crash Threshold Graph](ASSETS\08_latency_crash_threshold.png)
 
 ---
 
-### 📉 09_patient_abandonments.sql
+### 📉 09_patient_rage_quits.sql
 * **The Problem:** Product managers couldn't track how patients were reacting to wait times using standard clinical logs.
 * **What I Did:** I used conditional aggregation (`COUNTIF`) on the raw app telemetry logs to map user behavior states against network performance.
 * **My Audit Findings:** I successfully isolated a cohort of session abandonments—patients who dropped out of the virtual waiting room out of frustration after initializing the app, but before the doctor connected.
 
-![Patient Abandonment Funnel](assets/patient_abandonments.png)
+
+![Patient Abandonment Funnel](ASSETS\09_patient_rage_quits.png)
 
 ---
 
@@ -118,7 +122,7 @@ graph TD
 * **What I Did:** I ran a financial audit using a defensive `LEFT JOIN` from the billing master table, utilizing a `NULL` filter to catch any orphaned financial records that lacked backend telemetry.
 * **My Audit Findings:** The query returned exactly 0 rows. In the dataset tested, every single billed session was tied to a successful `VIDEO_LIVE` handshake, meaning the audit found no evidence of refund-triggering ghost claims.
 
-![Ghost Revenue Audit Table](assets/ghost_revenue_audit.png)
+![Ghost Revenue Audit Table](ASSETS\10_ghost_revenue_audit.png)
 
 ---
 
@@ -127,7 +131,7 @@ graph TD
 * **What I Did:** I bridged three distinct databases (Patients → Sessions → Billing) and calculated the true net revenue per acquisition channel.
 * **My Audit Findings:** The data revealed a massive baseline split between audience attention and intent. Against a flat $13.50 CAC, TikTok and Meta drove high traffic but yielded only **$647 in True Net Revenue per user**. Email drove less traffic but yielded **$3,462 in True Net Revenue per user**. Based on this, I recommended shifting the heavy conversion budget toward Email and Search.
 
-![True Campaign ROI Dashboard](assets/true_campaign_roi.png)
+![True Campaign ROI Dashboard](ASSETS\11_true_campaign_roi.png)
 
 ---
 
@@ -147,3 +151,7 @@ graph TD
   * `09_patient_abandonments.sql`
   * `10_ghost_revenue_audit.sql`
   * `11_true_campaign_roi.sql`
+
+  ---
+*All images in Readme are genrated with help of AI*
+ 
