@@ -35,6 +35,7 @@ Here are the core technical and analytical skills I applied throughout this proj
 * **The Problem:** Raw healthcare data across campaigns, patients, telemetry, and billing contained messy strings, mixed date formats, and deeply nested JSON payloads, requiring repeatable cleaning before analysis.
 * **What I Did:** I built 6 automated staging views to sanitize the raw inputs. This involved flattening JSON telemetry payloads, defensively parsing multi-format strings, and safely casting data types (`SAFE_CAST`) to establish a clean, production-ready foundation.
 
+```mermaid
 graph TD
     %% Define Raw Data Layer
     subgraph "Raw Source Layer (Messy CSVs / Inconsistent Formats)"
