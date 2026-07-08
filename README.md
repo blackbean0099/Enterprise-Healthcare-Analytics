@@ -36,6 +36,7 @@ Here are the core technical and analytical skills I applied throughout this proj
 * **What I Did:** I built 6 automated staging views to sanitize the raw inputs. This involved flattening JSON telemetry payloads, defensively parsing multi-format strings, and safely casting data types (`SAFE_CAST`) to establish a clean, production-ready foundation.
 
 ```mermaid
+%%{init: {'theme': 'dark'}}%%
 graph TD
     %% Define Raw Data Layer
     subgraph "Raw Source Layer (Messy CSVs / Inconsistent Formats)"
@@ -75,10 +76,10 @@ graph TD
     A5 --> B5 --> C5
     A6 --> B6 --> C6
 
-    %% Styling
-    classDef raw fill:#ffdde1,stroke:#333,stroke-width:1px;
-    classDef transform fill:#ffeaa7,stroke:#333,stroke-width:1px;
-    classDef clean fill:#d4edda,stroke:#333,stroke-width:1px;
+    %% High-Contrast Dark Mode Styling
+    classDef raw fill:#1a0505,stroke:#ff4757,stroke-width:2px,color:#ffffff;
+    classDef transform fill:#1e1500,stroke:#ffa502,stroke-width:2px,color:#ffffff;
+    classDef clean fill:#051a0d,stroke:#2ed573,stroke-width:2px,color:#ffffff;
     
     class A1,A2,A3,A4,A5,A6 raw;
     class B1,B2,B3,B4,B5,B6 transform;
@@ -93,7 +94,7 @@ graph TD
 * **My Audit Findings:** CAC is identical across all channels at roughly **$13.50 per acquisition**. However, Email generates an older demographic with a **$1,898 Lifetime Value**, while TikTok yields a younger demographic with only a **$100 LTV**.
 
 
-![Demographic LTV Matrix Chart](ASSETS\07_Demographic_Acquisition_Matrix.png)
+![Demographic LTV Matrix Chart](ASSETS/07_Demographic_Acquisition_Matrix.png)
 
 
 ---
@@ -103,7 +104,7 @@ graph TD
 * **What I Did:** I analyzed the backend telemetry ping logs against successful and failed video sessions to find the breaking point of the software.
 * **My Audit Findings:** I identified a consistent `999` ping spike. The data indicated that sessions hitting this latency threshold reliably triggered a backend network timeout.
 
-![Latency Crash Threshold Graph](ASSETS\08_latency_crash_threshold.png)
+![Latency Crash Threshold Graph](ASSETS/08_latency_crash_threshold.png)
 
 ---
 
@@ -113,7 +114,7 @@ graph TD
 * **My Audit Findings:** I successfully isolated a cohort of session abandonments—patients who dropped out of the virtual waiting room out of frustration after initializing the app, but before the doctor connected.
 
 
-![Patient Abandonment Funnel](ASSETS\09_patient_rage_quits.png)
+![Patient Abandonment Funnel](ASSETS/09_patient_rage_quits.png)
 
 ---
 
@@ -122,7 +123,7 @@ graph TD
 * **What I Did:** I ran a financial audit using a defensive `LEFT JOIN` from the billing master table, utilizing a `NULL` filter to catch any orphaned financial records that lacked backend telemetry.
 * **My Audit Findings:** The query returned exactly 0 rows. In the dataset tested, every single billed session was tied to a successful `VIDEO_LIVE` handshake, meaning the audit found no evidence of refund-triggering ghost claims.
 
-![Ghost Revenue Audit Table](ASSETS\10_ghost_revenue_audit.png)
+![Ghost Revenue Audit Table](ASSETS/10_ghost_revenue_audit.png)
 
 ---
 
@@ -131,7 +132,7 @@ graph TD
 * **What I Did:** I bridged three distinct databases (Patients → Sessions → Billing) and calculated the true net revenue per acquisition channel.
 * **My Audit Findings:** The data revealed a massive baseline split between audience attention and intent. Against a flat $13.50 CAC, TikTok and Meta drove high traffic but yielded only **$647 in True Net Revenue per user**. Email drove less traffic but yielded **$3,462 in True Net Revenue per user**. Based on this, I recommended shifting the heavy conversion budget toward Email and Search.
 
-![True Campaign ROI Dashboard](ASSETS\11_true_campaign_roi.png)
+![True Campaign ROI Dashboard](ASSETS/11_true_campaign_roi.png)
 
 ---
 
