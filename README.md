@@ -9,7 +9,18 @@ To solve this, basic SQL wasn't enough. I built a robust Google BigQuery data pi
 **⚙️ Core Stack & Heavy Hitters:** Google BigQuery (SQL), JSON/Array Parsing (`JSON_VALUE`), Defensive Casting (`COALESCE`, `SAFE.PARSE_DATE`), Epoch Conversion (`TIMESTAMP_SECONDS`), Set-Based Conditional Aggregation (`COUNTIF`), and Anti-Joins.
 
 ---
+## POWER BI DASHBOARD SCREENSHOT
+Finance & Ghost Revenue Audit 
+<img width="1311" height="748" alt="Screenshot 2026-07-11 234823" src="https://github.com/user-attachments/assets/ebf67309-1048-4c03-95e8-a11d93bd20f9" />
+Demographic Acquisition Matrix
+<img width="1318" height="729" alt="Screenshot 2026-07-11 234844" src="https://github.com/user-attachments/assets/9f12caaa-7ed5-42c3-ae2f-e4c6a3c71f17" />
+Technical Health & Patient Experience
+<img width="1317" height="742" alt="Screenshot 2026-07-11 234731" src="https://github.com/user-attachments/assets/ca3e7f9e-1ac1-44cf-88c5-f94a8e65acdb" />
 
+
+
+
+---
 ## 🎯 Executive Summary: My Key Discoveries
 If you only have a minute, here are the major business insights I uncovered during this audit:
 * 🛡️ **Compliance Audit:** I audited the billing records against backend telemetry to check for disconnected sessions. In the dataset tested, I found no evidence of bills being generated without a successful video connection.
