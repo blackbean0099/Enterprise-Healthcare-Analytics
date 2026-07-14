@@ -165,5 +165,5 @@ graph TD
   * `11_true_campaign_roi.sql`
 
   ---
-*All images in Readme are genrated with help of AI (except powerbi dashboard)*
+
  
